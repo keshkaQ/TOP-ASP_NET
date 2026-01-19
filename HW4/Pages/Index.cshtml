@@ -1,0 +1,50 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div style="text-align: center;">
+    <h1 style="font-size: 48px;">Homework 4</h1>
+    <h3>Работу выполнил Банарь Кирилл</h3>
+    <h2>Группа ПВ-425</h2>
+
+    @if (Model.HasResult)
+    {
+        <div style="background: #d1ecf1; border: 1px solid #bee5eb; 
+                    padding: 15px; margin-top: 20px; border-radius: 5px;">
+            <h4>Результат конвертации:</h4>
+            <p>@Model.UsdInput USD = @Model.Roubles.ToString("N2") RUB</p>
+            <p>Курс: 1 USD = @Model.Course RUB</p>
+            <a href="/" style="background: green; color: white; 
+                               padding: 8px 16px; border: none; 
+                               border-radius: 4px; text-decoration: none;">
+                Новый расчет
+            </a>
+        </div>
+    }
+    else
+    {
+        <div style="margin-top: 50px;">
+            <h4>Конвертер USD в RUB</h4>
+            
+            <form method="get" style="margin-top: 15px;">
+                <div style="display: flex; justify-content: center;">
+                            <input type="number"
+                                   step="0.01"
+                                   name="usdInput"
+                                   style="padding: 8px; border: 1px solid #ccc; 
+                                          border-radius: 4px;"
+                                   placeholder="Введите сумму в USD"
+                                   required>
+                            <button type="submit"
+                                    style="background: green; color: white; 
+                                           padding: 8px 16px; border: none; 
+                                           border-radius: 5px; margin-left: 5px;">
+                                Конвертировать
+                            </button>
+                </div>
+            </form>
+        </div>
+    }
+</div>
