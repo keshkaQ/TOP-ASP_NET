@@ -1,0 +1,66 @@
+﻿@page "{number?}"
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h3>Демонстрация передачи параметров</h3>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Способ 1: Через Query String (обработчик-метод OnGet)
+        </div>
+        <div class="card-body">
+            <p>Добавьте в URL:/@Model.InputNumber или /?InputNumber=@Model.InputNumber</p>
+            <p>Примеры:</p>
+            <ul style="list-style:none">
+                <li><a href="/5">/5</a> (через маршрут работает благодаря page "{number?}")</li>
+                <li><a href="/?InputNumber=3">/?InputNumber=3</a> (через query string работает благодаря [BindProperty(SupportsGet = true)])</li>
+                <li><a href="/?number=4">/?number=4</a> (через параметр number работает благодаря OnGet(int? number))</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            Способ 2: Через форму (POST)
+        </div>
+        <div class="card-body">
+            <form method="post">
+                <div class="mb-3">
+                    <label asp-for="InputNumber" class="form-label"></label>
+                    <input asp-for="InputNumber" class="form-control" style="width: 200px; margin: 0 auto;"  />
+                    <span asp-validation-for="InputNumber" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">Вычислить факториал</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@if (Model.RequestMethod == "GET")
+{
+    <div class="alert alert-info mt-4 text-center">
+        <h4>Результат (получен через @Model.RequestMethod):</h4>
+        <p>Факториал числа @Model.InputNumber равен @Model.Factorial</p>
+    </div>
+}
+
+@if (Model.RequestMethod == "POST")
+{
+    @if (ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-success mt-4 text-center">
+            <h4>Результат (получен через @Model.RequestMethod):</h4>
+            <p>Факториал числа @Model.InputNumber равен @Model.Factorial</p>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger mt-4 text-center">
+            <h4>Ошибка ввода!</h4>
+            <p>Пожалуйста, введите число от 0 до 10</p>
+        </div>
+    }
+}
