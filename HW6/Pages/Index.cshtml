@@ -1,0 +1,81 @@
+﻿@page
+@model IndexModel
+
+<h1>🏆 Рейтинг сайтов</h1>
+<div>
+    <p><a href="/?rating=94&handler=ByRating">Пример фильтрации по рейтингу</a></p>
+    <p><a href="/?name=google&handler=ByName">Пример фильтрации по названию</a></p>
+    @if (!string.IsNullOrEmpty(Model.SearchMessage))
+    {
+        <div class="alert alert-info">
+            @Model.SearchMessage
+            <a href="/">Показать все</a>
+        </div>
+    }
+</div>
+
+
+<form method="get" class="row mb-4" id="searchForm">
+    <div class="col-md-6">
+        <div class="input-group">
+            <input type="text" name="name" class="form-control"
+                   placeholder="Поиск по названию..."
+                    />
+            <button type="submit" class="btn btn-primary"
+                    name="handler" value="ByName">
+                Найти по имени
+            </button>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="input-group">
+            <input type="number" name="rating" class="form-control"
+                   placeholder="Рейтинг (1-100)" min="1" max="100"
+                    />
+            <button type="submit" class="btn btn-secondary"
+                    name="handler" value="ByRating">
+                Найти по рейтингу
+            </button>
+        </div>
+    </div>
+</form>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>Рейтинг</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var site in Model.DisplayedSites)
+        {
+            <tr>
+                <td>@site.Name</td>
+                <td>
+                    <div class="progress" style="height: 25px;">
+                        <div class="progress-bar @GetRatingColor(site.Rating)"
+                             role="progressbar"
+                             style="width: @site.Rating%;"
+                             aria-valuenow="@site.Rating"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                            @site.Rating/100
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@functions {
+    string GetRatingColor(int rating)
+    {
+        if (rating >= 90) return "bg-success";
+        if (rating >= 80) return "bg-primary";
+        if (rating >= 70) return "bg-info";
+        if (rating >= 60) return "bg-warning";
+        return "bg-danger";
+    }
+}
