@@ -1,0 +1,35 @@
+﻿@page "{name?}"
+@model IndexModel
+
+@if (string.IsNullOrEmpty(Model.AuthorName))
+{
+    <div>
+        <h3>Введите имя автора:</h3>
+        <p>Примеры:</p>
+        <ul style="list-style:circle">
+            <li><a href="/?name=Пушкин">Пушкин</a></li>
+            <li><a href="/?name=Шекспир">Шекспир</a></li>
+            <li><a href="/?name=Толстой">Толстой</a></li>
+        </ul>
+    </div>
+}
+else
+{
+    <div>
+        <h2>@Model.AuthorName</h2>
+        <div style="margin: 20px 0;">
+            <a href="/?name=@Model.AuthorName" style="margin-right: 10px; padding: 5px 10px; background: blue; color: white; text-decoration: none;">HTML</a>
+            <a href="/?name=@Model.AuthorName&format=json" style="margin-right: 10px; padding: 5px 10px; background: green; color: white; text-decoration: none;">JSON</a>
+            <a href="/?name=@Model.AuthorName&format=file" style="padding: 5px 10px; background: red; color: white; text-decoration: none;">Скачать файл</a>
+        </div>
+
+        <p><a href="/" style="color:gray;">← Назад</a></p>
+
+        @if (!string.IsNullOrEmpty(Model.Result))
+        {
+            <div style="padding: 20px; border-left: 4px solid #007bff; margin-top: 20px;">
+                <pre style="white-space: pre-wrap; font-size: 1.5rem;">@Model.Result</pre>
+            </div>
+        }
+    </div>
+}
