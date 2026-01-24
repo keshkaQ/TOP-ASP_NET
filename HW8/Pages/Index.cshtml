@@ -1,0 +1,25 @@
+﻿@page
+@model IndexModel
+@inject ITimeService timeService
+
+<div style="margin: 20px 0; padding: 15px; background: #f0f8ff; border-left: 4px solid #007bff;">
+    <b>Текущее время через внедрение директивы @@inject:</b> @timeService.GetTime()
+</div>
+
+<h3>@ViewBag.Title (через словарь ViewBag)</h3>
+
+@if (ViewData["Cities"] is List<string> cities)
+{
+    <table>
+        @foreach (var city in cities)
+        {
+            <tr style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 10px;">• @city</td>
+            </tr>
+        }
+    </table>
+}
+
+<p style="margin-top: 20px; color: gray;">
+    Использование словарей ViewData, ViewBag и директивы @@inject
+</p>
