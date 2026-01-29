@@ -1,0 +1,241 @@
+﻿/* стили только для главной страницы */
+
+.home-page main {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+    min-height: 600px;
+}
+
+.home-page aside {
+    flex: 0 0 300px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.home-page section {
+    flex: 1;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.home-page h2 {
+    color: #c8102e;
+    margin-bottom: 15px;
+    font-size: 28px;
+}
+
+.home-page h3 {
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 22px;
+    border-bottom: 2px solid #c8102e;
+    padding-bottom: 5px;
+}
+
+.home-page .match {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: white;
+    border-radius: 8px;
+    border-left: 4px solid #c8102e;
+}
+.home-page .match:hover {
+    transform: translateX(-5px);
+    transition: transform 0.2s ease;
+    box-shadow: 0 2px 8px rgba(200, 16, 46, 0.2);
+
+}
+
+.home-page .teams {
+    flex: 1;
+}
+
+.home-page .team {
+    font-weight: bold;
+}
+
+.home-page .liverpool {
+    color: #c8102e;
+}
+
+.home-page .score {
+    flex: 1;
+    margin-right: 10px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.home-page .main_photo img {
+    margin: 15px 0;
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    display: block;
+}
+
+.home-page article p {
+    margin-bottom: 15px;
+}
+
+.home-page em {
+    color: #666;
+    font-style: italic;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.home-page .player-card {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: white;
+    border-radius: 8px;
+    border-left: 4px solid #c8102e;
+    transition: transform 0.2s ease;
+}
+
+.home-page .player-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px rgba(200, 16, 46, 0.2);
+
+}
+
+.home-page .player-card img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+    border: 2px solid #c8102e;
+
+}
+
+.home-page .info {
+    flex: 1;
+}
+
+.home-page .name {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.home-page .position {
+    color: #666;
+    font-size: 14px;
+}
+
+@media (max-width: 1024px) {
+    .home-page main {
+        gap: 15px;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .home-page main {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+        min-height: auto;
+    }
+
+    .home-page aside,
+    .home-page section {
+        flex: none;
+        width: 100%;
+        padding: 15px;
+    }
+
+    .home-page .match {
+        flex-wrap: wrap;
+        padding: 8px;
+    }
+
+    .home-page .teams,
+    .home-page .score {
+        flex: 1 1 100%;
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    .home-page .score {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .home-page h2 {
+        font-size: 24px;
+    }
+
+    .home-page h3 {
+        font-size: 20px;
+    }
+
+    .home-page .player-card img {
+        width: 50px;
+        height: 50px;
+        margin-right: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .home-page main {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .home-page aside,
+    .home-page section {
+        padding: 12px;
+    }
+
+    .home-page h2 {
+        font-size: 22px;
+    }
+
+    .home-page h3 {
+        font-size: 18px;
+    }
+
+    .home-page .match {
+        padding: 6px;
+        margin-bottom: 8px;
+    }
+
+    .home-page .score {
+        font-size: 22px;
+    }
+
+    .home-page .player-card {
+        padding: 8px;
+    }
+
+        .home-page .player-card img {
+            width: 45px;
+            height: 45px;
+            margin-right: 12px;
+        }
+
+    .home-page .name {
+        font-size: 15px;
+    }
+
+    .home-page .position {
+        font-size: 12px;
+    }
+
+    .home-page article p {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+}
