@@ -1,0 +1,85 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Добавление фильма";
+}
+
+<div class="container">
+    <h2 class="text-center mb-4">Добавление фильма</h2>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert @(Model.IsSuccess ? "alert-success" : "alert-danger") mb-4">
+            <h5>@(Model.IsSuccess ? "Успешно!" : "Ошибка!")</h5>
+            <p>@Model.Message</p>
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form method="post" asp-antiforgery="true" class="p-4 border rounded bg-light">
+                <div asp-validation-summary="ModelOnly"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Movie.Name" class="form-label"></label>
+                    <input class="form-control" asp-for="Movie.Name" placeholder="Введите название фильма" />
+                    <span asp-validation-for="Movie.Name" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Movie.Description" class="form-label"></label>
+                    <textarea class="form-control" asp-for="Movie.Description" rows="3" placeholder="Введите описание фильма"></textarea>
+                    <div class="form-text">Максимум 500 символов</div>
+                    <span asp-validation-for="Movie.Description" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Movie.Genre" class="form-label"></label>
+                    <select asp-for="Movie.Genre" asp-items="Model.Genres" class="form-select">
+                        <option value="">Выберите жанр</option>
+                    </select>
+                    <span asp-validation-for="Movie.Genre" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Тип контента</label>
+                    <div class="p-3 border rounded bg-white">
+                        @foreach (var contentType in Model.ContentTypes)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio"
+                                       asp-for="Movie.ContentType"
+                                       value="@contentType.Value">
+                                <label class="form-check-label" for="@contentType.Value">
+                                    @contentType.Name
+                                </label>
+                            </div>
+                        }
+                    </div>
+                    <span asp-validation-for="Movie.ContentType" class="text-danger small"></span>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Movie.Rating" class="form-label"></label>
+                        <input class="form-control" asp-for="Movie.Rating"
+                               type="number" step="0.1" min="1" max="5" placeholder="1.0-5.0" />
+                        <span asp-validation-for="Movie.Rating" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Movie.YearOfRelease" class="form-label"></label>
+                        <input class="form-control" asp-for="Movie.YearOfRelease"
+                               type="number" min="1900" max="2026" placeholder="1900-2026" />
+                        <span asp-validation-for="Movie.YearOfRelease" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">
+                        Добавить фильм
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
