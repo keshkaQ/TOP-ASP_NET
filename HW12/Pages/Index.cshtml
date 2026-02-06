@@ -5,7 +5,35 @@
 }
 
 <div class="text-center">
-    <h2>Список пользователей</h2>
+    <h2>Переключение между базами</h2>
+
+    <div class="mb-4">
+        <form method="post">
+            <button type="submit"
+                    asp-page-handler="SwitchDatabase"
+                    asp-route-database="Postgres"
+                    class="btn @(Model.CurrentDatabase == "Postgres" ? "btn-primary" : "btn-outline-primary")">
+                Postgres
+            </button>
+            <button type="submit"
+                    asp-page-handler="SwitchDatabase"
+                    asp-route-database="PostgresDocker"
+                    class="btn @(Model.CurrentDatabase == "PostgresDocker" ? "btn-primary" : "btn-outline-primary")">
+                Docker Postgres
+            </button>
+            <button type="submit"
+                    asp-page-handler="SwitchDatabase"
+                    asp-route-database="SqlServer"
+                    class="btn @(Model.CurrentDatabase == "SqlServer" ? "btn-primary" : "btn-outline-primary")">
+                SQL Server
+            </button>
+        </form>
+
+        <div class="mt-2">
+            <p>Текущая база: <strong>@Model.CurrentDatabase</strong></p>
+        </div>
+    </div>
+
     <table class="table table-hover table-striped mb-0">
         <thead class="table-light">
             <tr>
@@ -15,7 +43,7 @@
                 <th>Address</th>
             </tr>
         </thead>
-       
+
         <tbody>
             @foreach (var user in Model.Users)
             {
@@ -23,7 +51,17 @@
                     <td>@user.FirstName</td>
                     <td>@user.LastName</td>
                     <td>@user.Email</td>
-                    <td>@user.Address</td></tr>
+                    <td>@user.Address</td>
+                </tr>
+            }
+
+            @if (!Model.Users.Any())
+            {
+                <tr>
+                    <td colspan="4" class="text-center text-muted">
+                        Нет данных в выбранной базе
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
