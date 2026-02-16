@@ -1,0 +1,38 @@
+﻿@page
+@using Exam.Models
+@model IndexModel
+@{
+    ViewData["Title"] = "Теннисный клуб - Главная";
+}
+
+
+<div class="main-section">
+    <div class="main-content">
+        <h1>Теннисный клуб</h1>
+        <p>Добро пожаловать в наш теннисный клуб</p>
+
+        <div class="cards-grid">
+            <a href="/Clients" class="simple-card">
+                <div class="card-header-simple blue">👥 Клиенты</div>
+                <div class="card-body-simple">
+                    <p>Управление клиентами клуба</p>
+                    <span class="count-badge">@Model.ClientsCount клиентов</span>
+                </div>
+            </a>
+            <a href="/TennisCourts" class="simple-card">
+                <div class="card-header-simple green">🎾 Теннисные корты</div>
+                <div class="card-body-simple">
+                    <p>Управление кортами и тарифами</p>
+                    <span class="count-badge">@Model.CourtsCount кортов</span>
+                </div>
+            </a>
+            <a href="/Bookings" class="simple-card">
+                <div class="card-header-simple orange">📅 Бронирования</div>
+                <div class="card-body-simple">
+                    <p>Управление бронированиями</p>
+                    <span class="count-badge">@Model.BookingsCount бронирований</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

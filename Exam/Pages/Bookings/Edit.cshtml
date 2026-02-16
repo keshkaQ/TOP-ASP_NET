@@ -1,0 +1,161 @@
+﻿@page "{id}"
+@using Exam.Models
+@model Exam.Pages.Bookings.EditModel
+@{
+    ViewData["Title"] = "Редактировать бронирование";
+}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        Редактировать бронирование
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert">
+                    </div>
+
+                    <form method="post">
+                        <input type="hidden" asp-for="Booking.Id" />
+                        <input type="hidden" asp-for="Booking.CreatedAt" />
+
+                        <div class="mb-3">
+                            <label asp-for="Booking.TennisCourtId" class="form-label">
+                                @Html.DisplayNameFor(model => model.Booking.TennisCourtId)
+                                <span class="text-danger">*</span>
+                            </label>
+                            <select asp-for="Booking.TennisCourtId" class="form-select" asp-items="Model.CourtList" id="courtSelect">
+                                <option value="">Выберите корт</option>
+                            </select>
+                            <span asp-validation-for="Booking.TennisCourtId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Booking.ClientId" class="form-label">
+                                @Html.DisplayNameFor(model => model.Booking.ClientId)
+                                <span class="text-danger">*</span>
+                            </label>
+                            <select asp-for="Booking.ClientId" class="form-select" asp-items="Model.ClientsList">
+                                <option value="">Выберите клиента</option>
+                            </select>
+                            <span asp-validation-for="Booking.ClientId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Booking.StartTime" class="form-label">
+                                @Html.DisplayNameFor(model => model.Booking.StartTime)
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Booking.StartTime" class="form-control" type="datetime-local" id="startTime"
+                                   value="@Model.Booking.StartTime.ToString("yyyy-MM-ddTHH:mm")" />
+                            <span asp-validation-for="Booking.StartTime" class="text-danger"></span>
+                            <small class="form-text text-muted">Введите дату и время начала игры</small>
+                        </div>
+
+            
+                        <div class="mb-3">
+                            <label asp-for="Booking.EndTime" class="form-label">
+                                @Html.DisplayNameFor(model => model.Booking.EndTime)
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Booking.EndTime" class="form-control" type="datetime-local" id="endTime"
+                                   value="@Model.Booking.EndTime.ToString("yyyy-MM-ddTHH:mm")" />
+                            <span asp-validation-for="Booking.EndTime" class="text-danger"></span>
+                            <small class="form-text text-muted">Введите дату и время окончания игры</small>
+                        </div>
+
+                   
+                        <div class="mb-3">
+                            <label asp-for="Booking.Status" class="form-label">Статус
+                                <span class="text-danger">*</span>
+                            </label>
+                            <select asp-for="Booking.Status" class="form-select" asp-items="Html.GetEnumSelectList<Status>()">
+                                <option value="">Выберите статус</option>
+                            </select>
+                            <span asp-validation-for="Booking.Status" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Предполагаемая стоимость</label>
+                            <div class="alert alert-info" id="costDisplay">
+                                Выберите корт и укажите время для расчета
+                            </div>
+                            <small class="form-text text-muted">
+                                * Окончательная стоимость будет рассчитана при сохранении
+                            </small>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-page="./Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> Назад к списку
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Сохранить бронирование
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Цены кортов загружены с сервера
+        const courtPrices = @Html.Raw(Model.CourtPricesJson);
+
+        function calculateCost() {
+            const courtId = document.getElementById('courtSelect').value;
+            const startTime = document.getElementById('startTime').value;
+            const endTime = document.getElementById('endTime').value;
+            const costDisplay = document.getElementById('costDisplay');
+
+            if (!courtId || !startTime || !endTime) {
+                costDisplay.textContent = 'Выберите корт и укажите время для расчета';
+                costDisplay.className = 'alert alert-info';
+                return;
+            }
+
+            const pricePerHour = courtPrices[courtId];
+            if (!pricePerHour) {
+                costDisplay.textContent = 'Цена для выбранного корта не найдена';
+                costDisplay.className = 'alert alert-warning';
+                return;
+            }
+
+            const start = new Date(startTime);
+            const end = new Date(endTime);
+
+            if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+                costDisplay.textContent = 'Некорректный формат даты';
+                costDisplay.className = 'alert alert-danger';
+                return;
+            }
+
+            if (end <= start) {
+                costDisplay.textContent = 'Время окончания должно быть позже времени начала';
+                costDisplay.className = 'alert alert-danger';
+                return;
+            }
+
+            const hours = (end - start) / (1000 * 60 * 60);
+            const cost = hours * pricePerHour;
+
+            costDisplay.innerHTML = `
+                <strong>${cost.toFixed(2)} ₽</strong><br>
+                <small>${hours.toFixed(1)} ч × ${pricePerHour} ₽/ч</small>
+            `;
+            costDisplay.className = 'alert alert-success';
+        }
+
+        document.getElementById('courtSelect').addEventListener('change', calculateCost);
+        document.getElementById('startTime').addEventListener('change', calculateCost);
+        document.getElementById('endTime').addEventListener('change', calculateCost);
+
+        calculateCost();
+    </script>
+}
