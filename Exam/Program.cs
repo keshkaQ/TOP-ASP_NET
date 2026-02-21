@@ -1,7 +1,18 @@
 using Exam.Database;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Настройка Serilog
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.File(Path.Combine(Directory.GetCurrentDirectory(), "Logs", "TennisReservation-.txt"),
+                  rollingInterval: RollingInterval.Day,
+                  outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -30,7 +41,4 @@ app.MapRazorPages()
 
 app.Run();
 
-// Страница с ошибками, добавить логгер
-// Разделить на проекты
-// Чистая архитектура
-// Валидация номер телефона (сделать единый формат), email
+

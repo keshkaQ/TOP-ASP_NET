@@ -11,10 +11,11 @@ namespace Exam.Pages.Bookings
     public class CreateModel : PageModel
     {
         private readonly AppDbContext _context;
-
-        public CreateModel(AppDbContext context)
+        private readonly ILogger<CreateModel> _logger;
+        public CreateModel(AppDbContext context, ILogger<CreateModel> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         [BindProperty]
@@ -56,6 +57,10 @@ namespace Exam.Pages.Bookings
                     Text = c.Name
                 })
                 .ToListAsync();
+            if (CourtList.Count <= 0)
+            {
+                _logger.LogError($"Корты не найдены");
+            }
 
             ClientsList = await _context.Clients
                 .Select(c => new SelectListItem
@@ -64,6 +69,10 @@ namespace Exam.Pages.Bookings
                     Text = $"{c.FirstName} {c.LastName}"
                 })
                 .ToListAsync();
+            if (ClientsList.Count <= 0)
+            {
+                _logger.LogError($"Клиенты не найдены");
+            }
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -72,6 +81,7 @@ namespace Exam.Pages.Bookings
 
             if (!ModelState.IsValid)
             {
+                _logger.LogError($"Привязка бронирования завершилась с ошибкой");
                 return Page();
             }
 
@@ -82,12 +92,14 @@ namespace Exam.Pages.Bookings
             if (Booking.StartTime >= Booking.EndTime)
             {
                 ModelState.AddModelError("Booking.EndTime", "Время окончания должно быть позже времени начала");
+                _logger.LogError("Время окончания должно быть позже времени начала");
                 return Page();
             }
 
             if (Booking.StartTime < DateTime.UtcNow) 
             {
                 ModelState.AddModelError("Booking.StartTime", "Дата начала не может быть в прошлом");
+                _logger.LogError("Дата начала не может быть в прошлом");
                 return Page();
             }
 
@@ -95,6 +107,7 @@ namespace Exam.Pages.Bookings
             if (court == null)
             {
                 ModelState.AddModelError("Booking.TennisCourtId", "Выбранный корт не найден");
+                _logger.LogError("Выбранный корт не найден");
                 return Page();
             }
 
@@ -113,6 +126,7 @@ namespace Exam.Pages.Bookings
             if (isCourtBusy)
             {
                 ModelState.AddModelError("Booking.StartTime", "Корт занят в выбранное время");
+                _logger.LogError("Корт занят в выбранное время");
                 return Page();
             }
 
@@ -125,11 +139,13 @@ namespace Exam.Pages.Bookings
                 await _context.SaveChangesAsync();
 
                 TempData["SuccessMessage"] = $"Бронирование для корта '{court.Name}' успешно создано. Стоимость: {Booking.TotalCost:C}";
+                _logger.LogInformation($"Бронирование для корта '{court.Name}' успешно создано. Стоимость: {Booking.TotalCost:C}");
                 return RedirectToPage("./Index");
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, $"Ошибка при сохранении: {ex.Message}");
+                _logger.LogError($"Ошибка при бронировании");
                 return Page();
             }
         }

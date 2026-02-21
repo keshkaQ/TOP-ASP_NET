@@ -9,10 +9,12 @@ namespace Exam.Pages.Clients
     public class EditModel : PageModel
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<CreateModel> _logger;
 
-        public EditModel(AppDbContext context)
+        public EditModel(AppDbContext context, ILogger<CreateModel> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         [BindProperty]
@@ -35,6 +37,7 @@ namespace Exam.Pages.Clients
         {
             if (!ModelState.IsValid)
             {
+                _logger.LogError($"Привязка клиента завершилась с ошибкой");
                 return Page();
             }
 
@@ -43,6 +46,7 @@ namespace Exam.Pages.Clients
 
             if (clientToUpdate == null)
             {
+                _logger.LogWarning($"Клиент с именем {Client.FirstName} {Client.LastName} не найден");
                 return NotFound();
             }
 
@@ -52,16 +56,19 @@ namespace Exam.Pages.Clients
                 await _context.SaveChangesAsync();
 
                 TempData["SuccessMessage"] = $"Клиент {Client.FirstName} {Client.LastName} успешно обновлен";
+                _logger.LogInformation($"Данные клиента {Client.FirstName} успешно обновлны");
                 return RedirectToPage("./Index");
             }
             catch (DbUpdateException ex) when (ex.InnerException?.Message.Contains("IX_Clients_Email") == true)
             {
                 ModelState.AddModelError("Client.Email", "Клиент с таким email уже существует");
+                _logger.LogError($"Клиент с {Client.Email} уже существует");
                 return Page();
             }
             catch (DbUpdateException)
             {
                 ModelState.AddModelError(string.Empty, "Ошибка при сохранении данных");
+                _logger.LogError($"Ошибка при сохранении клиента с именем {Client.FirstName} {Client.LastName}");
                 return Page();
             }
         }
